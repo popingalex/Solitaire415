@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solitaire>
+	<instructions>
+		<item>
+			You are only allowed to use classes
+			from the Java standard library.
+		</item>
+	</instructions>
+	<task>
+		<title>
+			In this assignment,
+			you will make a solitaire game,
+			see Fig. 1.
+		</title>
+		<rule>
+			The game has a card deck,
+			four card stacks,
+			and seven card lists.
+		</rule>
+		<rule>
+			The card deck starts off without any cards revealed,
+			and the card stacks start off empty.
+		</rule>
+		<rule>
+			The first lists starts with one card,
+			the second with two, and so on,
+			up to the seventh list
+			with seven.
+		</rule>
+		<rule>
+			The tail card of any list is always revealed (unless the list is empty).
+		</rule>
+		<rule>
+			You can reveal a card from the deck (one card at a time).
+		</rule>
+		<rule>
+			In a list, you can only put a red card (heart/diamonds)
+			on top of a black card (spades/clubs), or vice versa.
+		</rule>
+		<rule>
+			<p>
+				The Ranks of the cards go
+				king > queen > jack > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2 > ace,
+				from highest to lowest.
+			</p>
+			<p>
+				The revealed cards in a card list
+				must have consecutive ranks in decreasing order.
+			</p>
+			<p>
+				The cards on a card stack must start from ace and
+				have consecutive ranks in increasing order.
+			</p>
+		</rule>
+		<rule>
+			Each card stack corresponds to a specific suit (Hearts, Clubs, Spades, Diamonds).
+			You can only place cards to the stack that corresponds to their suits.
+		</rule>
+		<rule>
+			You can cut a card list into two lists, where the lower list contains only revealed cards.
+			And then link the lower list to the end of another list.
+		</rule>
+		<rule>
+			Once all four card stacks have 13 cards in them, you win.
+		</rule>
+		<extension>
+			<title>
+				If you want to,
+				you can add something to the Solitaire game
+				in addition to implementing all the specifications.
+				This can be absolutely anything you want
+				as long as what you have at the end is (basically) a Solitaire game,
+				anything else goes.
+				Some suggestions include:
+			</title>
+			<item>
+				implement an improved GUI which includes better art works on each card
+			</item>
+			<item>
+				sound effects
+			</item>
+			<item>
+				more sophisticated game rules
+			</item>
+			<item>
+				winning animation on the screen
+			</item>
+		</extension>
+	</task>
+	<classes>
+		<title>
+			You should implement the following classes,
+			along with these fields and methods.
+			You can add
+			additional classes,
+			methods or fields as you see fit.
+		</title>
+		<class className="Card">
+			<field fieldName="cardIndex">
+				The card's index, from 1 to 52.
+			</field>
+			<method methodName="getSuit">
+				Returns the card's suit.
+			</method>
+			<method methodName="getValue">
+				Returns the card's value (such as 10, king, etc).
+			</method>
+			<method methodName="colour">
+				The colour of the card is 'red' if this card is a heart or diamond,
+				and
+				'black' otherwise.
+			</method>
+			<method methodName="toString">
+				Returns a string representation of this card,
+				including its suit and
+				rank.
+				Example: Ace of clubs would be ClubA,
+				ten of diamonds would be Diamond10,
+				and queen of spades
+				would be SpadeQ.
+			</method>
+			<method methodName="paintThis" parameter="Graphics g">
+				Draws the card.
+				In the simple GUI,
+				this should draw
+				a Rectangle,
+				with the string representation of the card
+				written in the colour corre-sponding to
+				the colour of the card (either black or red).
+				(You don't have to make it pretty)
+			</method>
+		</class>
+		<class className="CardDeck">
+			<field fieldName="cards">
+				A circularly-linked list storing all the cards in the deck.
+			</field>
+			<field fieldName="currentCard">
+				The current card.
+			</field>
+			<method methodName="drawCard">
+				Open the next card, if this is the tail card, return null.
+			</method>
+			<method methodName="takeCard">
+				Delete and return the current card (so we can place it in a list or a
+				stack).
+			</method>
+		</class>
+		<class className="CardList">
+			<field fieldName="cards">
+				A linked list to store the cards in this list.
+			</field>
+			<field fieldName="openedIndex">
+				The index of the first opened card.
+			</field>
+			<field fieldName="tailCard">
+				The tail card.
+			</field>
+			<method methodName="cut" parameter="int index">
+				Separate the list into two: [0..(i-1)] and [i..count].
+				Open the card at (i-1) if necessary. Return the second list.
+			</method>
+			<method methodName="link" parameter="CardList other">
+				Join this list to the tail of the other list,
+				if the rules allow this.
+			</method>
+			<method methodName="add" parameter="Card c">
+				Add c as the new tail card,
+				if the rules allow this.
+			</method>
+			<method methodName="moveTail">
+				Delete and return the tail card.
+				Set the card beneath it as the new tail card.
+				Open the new tail card if necessary.
+			</method>
+		</class>
+		<class className="PaintingPanel">
+			<method methodName="paintComponent" parameter="Graphics g">
+				Draw the game stored in game.
+			</method>
+		</class>
+		<class className="Solitaire">
+			<title>
+				This is the main class of the game.
+			</title>
+			<field fieldName="deck">
+				A CardDeck for the current game's deck.
+			</field>
+			<field fieldName="stacks">
+				An array of CardStacks (of length 4).
+			</field>
+			<field fieldName="lists">
+				An array of CardLists (of length 7).
+			</field>
+			<method methodName="main" parameter="String[] args">
+				Should create a new Solitaire, then call showGUI,
+				passing the newly-created Solitaire object to it.
+				Lastly, should call the Solitaire object's
+				startGame method.
+			</method>
+			<method methodName="showGUI" parameter="Solitaire game">
+				Should create a GUI and display the game.
+			</method>
+			<method methodName="executeCommand" parameter="String command">
+				Perform whatever command indicates if
+				the
+				rules allow it and return a success message.
+				If the command is invalid,
+				return a warning instead.
+			</method>
+			<method methodName="startGame">
+				Runs a loop that accepts commands
+				until either a quit command is given or the player wins.
+				Should attempt to perform any commands given,
+				and prints all messages back to the user.
+			</method>
+		</class>
+		<note noteName="Data Structures Implementations">
+			<title>
+				For this assignment you will need to use several data structures taught in class such as
+				(circularly) linked lists and stacks. For this you will need to use your own implementations
+				together with the appropriate interface and abstract class files.
+			</title>
+		</note>
+		<note noteName="Shuffing the Cards">
+			<title>
+				As part of creating a new CardDeck for solitaire, you will need to shuffle it.
+				You can do this using the Fisher-Yates algorithm,
+				which is described as follows:
+			</title>
+			<item>
+				Create an array of length 52,
+				filled with each number from 1 to 52 in order from smallest to biggest.
+			</item>
+			<item>
+				Iterate over the array backwards (i.e. starting from the end and going back).
+				At each entry, do the following:
+			</item>
+			<item>
+				Pick a random integer j between 0 and the current index i.
+			</item>
+			<item>
+				Switch the elements at position i and position j in the array.
+				After you have finished this,
+				the array will be in a random order,
+				and you can use this to generate your shuffled CardDeck.
+				For code of this algorithm, Google "Fisher-Yates Java".
+			</item>
+		</note>
+	</classes>
+	<uis>
+		<title>You need to implement two user interfaces:</title>
+		<ui uiType="Command-line User Interface (CUI)">
+			<case>
+				When the game starts, the CUI should print a welcome message.
+			</case>
+			<case>
+				At each stage of the game,
+				the CUI should print out a current description of the game,
+				which include information about the card deck,
+				card stacks and card lists.
+				See below for a screenshot of the CUI which
+				corresponds to the game shown in Fig. 1.
+			</case>
+			<case>
+				<title>
+					Then the CUI should ask for the player to type in a command
+					by printing "Your next move:".
+					If the move is not valid,
+					print out "Invalide move" and
+					ask the player to give another command.
+					The possible commands are:
+				</title>
+				<command commandName="DrawCard">
+					Open the next card on the card deck.
+				</command>
+				<command commandName="DeckTo x">
+					Move one card from the deck to the xth list.
+					For example the command DeckTo 3
+					moves the card that is currently open in the card deck to the third list.
+				</command>
+				<command commandName="Link c x">
+					Suppose c is a revealed card in a card list, and 1 ≤ x ≤ 7.
+					This command moves all cards below and
+					including c in the same list to the xth list.
+					For example the
+					command Link Spade9 6 moves all card below and
+					including Spade6 to the 6th card list;
+					see the screenshot below.
+				</command>
+				<command commandName="Send c">
+					Suppose c is a tail card of a card list.
+					This command moves the card c to the stack
+					that corresponds to its suit.
+				</command>
+				<command commandName="Restart">
+					Restart the game.
+				</command>
+				<command commandName="Quit">
+					Stop the game.
+				</command>
+			</case>
+			<case>
+				If the game is won, the CUI should print out a line congratulating the player.
+			</case>
+		</ui>
+		<ui uiType="Graphical User Interface (GUI)">
+			<case>
+				A panel which paints the current state of the game.
+				(the card deck, the card lists, and the card stacks)
+			</case>
+			<case>
+				A menu bar with a single item called "Game" that
+				allows the player to restart a new game.
+			</case>
+			<case>
+				You can implement a mouse listener which
+				allows the players to drag and place the card as
+				in a typical Windows solitaire game.
+				(BUT THIS IS NOT COMPULSARY)
+				If you don't want to use a mouse listener,
+				you can allow the user to play the game by
+				using a TextField and a Button.
+				Within the TextField,
+				the player can type in commands as in the CUI.
+				Then the player can execute the command by
+				pressing the Button.
+			</case>
+		</ui>
+	</uis>
+</solitaire>

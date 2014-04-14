@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solitaire>
+	<instructions>
+		<item>
+			你只能使用Java基本库中的类
+		</item>
+	</instructions>
+	<task>
+		<title>
+			我们要开发一个(七列)纸牌接龙游戏(类似空当接龙)
+		</title>
+		<rule>
+			游戏有一个牌堆, 4个牌栈, 7个牌列
+		</rule>
+		<rule>
+			游戏开始时所有的纸牌都是覆面的, 牌栈都是空的
+		</rule>
+		<rule>
+			第一牌列一张纸牌, 第二列两张, 以此类推, 第七列七张
+		</rule>
+		<rule>
+			在牌列有牌的情况下，最后一张是翻开的
+		</rule>
+		<rule>
+			每次可以从牌堆一次翻开一张纸牌
+		</rule>
+		<rule>
+			牌列中翻开的纸牌红黑交替叠放
+		</rule>
+		<rule>
+			<p>
+				牌的顺序由高到低
+				K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2 > A
+			</p>
+			<p>
+				牌列中翻开的牌必须连续递减
+			</p>
+			<p>
+				牌栈中的牌必须从A开始并连续递增
+			</p>
+		</rule>
+		<rule>
+			牌栈中的牌花色相同(红心, 梅花, 黑桃, 方块).
+		</rule>
+		<rule>
+			可以从牌列中切出一列已经翻开的牌放到其他牌列上
+		</rule>
+		<rule>
+			4个牌栈的牌集满，游戏结束
+		</rule>
+		<extension>
+			<title>
+				可以添加一些附加要素，类似如下
+			</title>
+			<item>
+				美化的图形界面
+			</item>
+			<item>
+				音效
+			</item>
+			<item>
+				更复杂的规则
+			</item>
+			<item>
+				胜利动画
+			</item>
+		</extension>
+	</task>
+	<classes>
+		<title>
+			至少实现以下类和域及方法
+		</title>
+		<class className="Card">
+			<field fieldName="cardIndex">
+				纸牌的序号，1-52
+			</field>
+			<method methodName="getSuit">
+				获得纸牌的花色
+			</method>
+			<method methodName="getValue">
+				获得牌面的值
+			</method>
+			<method methodName="colour">
+				返回纸牌是'红'还是'黑'
+			</method>
+			<method methodName="toString">
+				返回表示这张纸牌花色与牌值的字符串
+			</method>
+			<method methodName="paintThis" parameter="Graphics g">
+				绘制纸牌，带边框和标志牌面的字符串，标明纸牌是红色还是黑色
+			</method>
+		</class>
+		<class className="CardDeck">
+			<field fieldName="cards">
+				存储牌堆中的纸牌的循环链表
+			</field>
+			<field fieldName="currentCard">
+				当前纸牌
+			</field>
+			<method methodName="drawCard">
+				获得下一张纸牌，如果牌堆为空，则返回空
+			</method>
+			<method methodName="takeCard">
+				从牌堆中移除纸牌放入牌栈或者牌列
+			</method>
+		</class>
+		<class className="CardList">
+			<field fieldName="cards">
+				牌列
+			</field>
+			<field fieldName="openedIndex">
+				第一张翻开的纸牌的下标
+			</field>
+			<field fieldName="tailCard">
+				牌列尾的纸牌
+			</field>
+			<method methodName="cut" parameter="int index">
+				切牌，如果有必要，翻开余下的牌列的最后一张，返回切出的牌列
+			</method>
+			<method methodName="link" parameter="CardList other">
+				在符合规则的情况下将这列牌链接到另一列上
+			</method>
+			<method methodName="add" parameter="Card c">
+				在符合规则的请款下将一张牌加入牌列
+			</method>
+			<method methodName="moveTail">
+				移除牌列尾部的牌，如果有必要，翻开余下牌列的最后一张
+			</method>
+		</class>
+		<class className="PaintingPanel">
+			<method methodName="paintComponent" parameter="Graphics g">
+				绘制游戏界面
+			</method>
+		</class>
+		<class className="Solitaire">
+			<title>
+				主类
+			</title>
+			<field fieldName="deck">
+				牌堆
+			</field>
+			<field fieldName="stacks">
+				牌栈数组[4]
+			</field>
+			<field fieldName="lists">
+				牌列数组[7]
+			</field>
+			<method methodName="main" parameter="String[] args">
+				主方法，实例化主类，与界面简历关联，开始游戏
+			</method>
+			<method methodName="showGUI" parameter="Solitaire game">
+				显示游戏界面
+			</method>
+			<method methodName="executeCommand" parameter="String command">
+				执行命令并提示成功与否
+			</method>
+			<method methodName="startGame">
+				启动游戏指令接收循环，并展现所有提示信息
+			</method>
+		</class>
+		<note noteName="Data Structures Implementations">
+			<title>
+				你会用到多种数据结构诸如(循环)链表和栈，恰当的使用接口和抽象类
+			</title>
+		</note>
+		<note noteName="Shuffing the Cards">
+			<title>
+				开始新游戏前需要洗牌，可以使用Fisher-Yates算法，描述如下
+			</title>
+			<item>
+				建立一个数组[52]并用1-52填充
+			</item>
+			<item>
+				逆序遍历
+			</item>
+			<item>
+				取一个大于0小于当前下标的随机数
+			</item>
+			<item>
+				交换下标为随机数的纸牌与当前纸牌，可以google该算法
+			</item>
+		</note>
+	</classes>
+	<uis>
+		<title>实现两种界面</title>
+		<ui uiType="Command-line User Interface (CUI)">
+			<case>
+				游戏开始的时候命令行界面应当输出欢迎信息
+			</case>
+			<case>
+				在游戏的每个阶段打印游戏当前状态
+				包括牌堆，牌栈，牌列的信息
+			</case>
+			<case>
+				<title>
+					命令行界面提示“Your next move”并等待玩家输入命令，
+					如果输入的命令无法识别，则提示“Invalide move”并继续等待玩家输入
+					合法命令如下：
+				</title>
+				<command commandName="DrawCard">
+					翻开牌堆中的下一张牌、
+				</command>
+				<command commandName="DeckTo x">
+					把牌堆顶部的牌移至x牌列
+				</command>
+				<command commandName="Link c x">
+					移动c和c顶部的牌到x牌列
+				</command>
+				<command commandName="Send c">
+					当c在某牌列的顶部，将c移至其花色所属的牌栈
+				</command>
+				<command commandName="Restart">
+					重新开始
+				</command>
+				<command commandName="Quit">
+					退出
+				</command>
+			</case>
+			<case>
+				如果游戏胜利，应该稍微祝贺一下玩家
+			</case>
+		</ui>
+		<ui uiType="Graphical User Interface (GUI)">
+			<case>
+				绘制图形界面，包括牌堆，牌栈，牌列的信息
+			</case>
+			<case>
+				允许玩家通过一个叫“Game”的菜单重新开始游戏
+			</case>
+			<case>
+				可以通过鼠标监听提供纸牌的拖拽(但这不重要)，
+				也可以用一个文本框加按钮实现命令的输入
+			</case>
+		</ui>
+	</uis>
+</solitaire>
