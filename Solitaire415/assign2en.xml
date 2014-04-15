@@ -35,13 +35,15 @@
 		</rule>
 		<rule>
 			In a list, you can only put a red card (heart/diamonds)
-			on top of a black card (spades/clubs), or vice versa.
+			on top of a black card
+			(spades/clubs), or vice versa.
 		</rule>
 		<rule>
 			<p>
 				The Ranks of the cards go
 				king > queen > jack > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2 > ace,
-				from highest to lowest.
+				from
+				highest to lowest.
 			</p>
 			<p>
 				The revealed cards in a card list
@@ -54,7 +56,8 @@
 		</rule>
 		<rule>
 			Each card stack corresponds to a specific suit (Hearts, Clubs, Spades, Diamonds).
-			You can only place cards to the stack that corresponds to their suits.
+			You can
+			only place cards to the stack that corresponds to their suits.
 		</rule>
 		<rule>
 			You can cut a card list into two lists, where the lower list contains only revealed cards.
@@ -67,9 +70,11 @@
 			<title>
 				If you want to,
 				you can add something to the Solitaire game
-				in addition to implementing all the specifications.
+				in addition to implementing all
+				the specifications.
 				This can be absolutely anything you want
-				as long as what you have at the end is (basically) a Solitaire game,
+				as long as what you have at the end
+				is (basically) a Solitaire game,
 				anything else goes.
 				Some suggestions include:
 			</title>
@@ -161,7 +166,8 @@
 			</method>
 			<method methodName="link" parameter="CardList other">
 				Join this list to the tail of the other list,
-				if the rules allow this.
+				if the
+				rules allow this.
 			</method>
 			<method methodName="add" parameter="Card c">
 				Add c as the new tail card,
@@ -169,8 +175,17 @@
 			</method>
 			<method methodName="moveTail">
 				Delete and return the tail card.
-				Set the card beneath it as the new tail card.
+				Set the card beneath it as the new tail
+				card.
 				Open the new tail card if necessary.
+			</method>
+		</class>
+		<class className="CardStack">
+			<field fieldName="stack">
+				A stack to store the cards.
+			</field>
+			<method methodName="add" parameter="Card c">
+				Adds c to the top of the stack, if the rules allow this.
 			</method>
 		</class>
 		<class className="PaintingPanel">
@@ -209,9 +224,11 @@
 			</method>
 			<method methodName="startGame">
 				Runs a loop that accepts commands
-				until either a quit command is given or the player wins.
+				until either a quit command is given
+				or the player wins.
 				Should attempt to perform any commands given,
-				and prints all messages back to the user.
+				and prints all messages back to
+				the user.
 			</method>
 		</class>
 		<note noteName="Data Structures Implementations">
@@ -224,16 +241,19 @@
 		<note noteName="Shuffing the Cards">
 			<title>
 				As part of creating a new CardDeck for solitaire, you will need to shuffle it.
-				You can do this using the Fisher-Yates algorithm,
+				You can do
+				this using the Fisher-Yates algorithm,
 				which is described as follows:
 			</title>
 			<item>
 				Create an array of length 52,
-				filled with each number from 1 to 52 in order from smallest to biggest.
+				filled with each number from 1 to 52 in order from smallest to
+				biggest.
 			</item>
 			<item>
 				Iterate over the array backwards (i.e. starting from the end and going back).
-				At each entry, do the following:
+				At each entry,
+				do the following:
 			</item>
 			<item>
 				Pick a random integer j between 0 and the current index i.
@@ -243,7 +263,8 @@
 				After you have finished this,
 				the array will be in a random order,
 				and you can use this to generate your shuffled CardDeck.
-				For code of this algorithm, Google "Fisher-Yates Java".
+				For
+				code of this algorithm, Google "Fisher-Yates Java".
 			</item>
 		</note>
 	</classes>
@@ -256,9 +277,11 @@
 			<case>
 				At each stage of the game,
 				the CUI should print out a current description of the game,
-				which include information about the card deck,
+				which
+				include information about the card deck,
 				card stacks and card lists.
-				See below for a screenshot of the CUI which
+				See below for a screenshot of
+				the CUI which
 				corresponds to the game shown in Fig. 1.
 			</case>
 			<case>
@@ -275,21 +298,25 @@
 				</command>
 				<command commandName="DeckTo x">
 					Move one card from the deck to the xth list.
-					For example the command DeckTo 3
+					For example the command
+					DeckTo 3
 					moves the card that is currently open in the card deck to the third list.
 				</command>
 				<command commandName="Link c x">
 					Suppose c is a revealed card in a card list, and 1 ≤ x ≤ 7.
-					This command moves all cards below and
+					This
+					command moves all cards below and
 					including c in the same list to the xth list.
 					For example the
 					command Link Spade9 6 moves all card below and
 					including Spade6 to the 6th card list;
-					see the screenshot below.
+					see the
+					screenshot below.
 				</command>
 				<command commandName="Send c">
 					Suppose c is a tail card of a card list.
-					This command moves the card c to the stack
+					This command moves the card
+					c to the stack
 					that corresponds to its suit.
 				</command>
 				<command commandName="Restart">
@@ -306,7 +333,8 @@
 		<ui uiType="Graphical User Interface (GUI)">
 			<case>
 				A panel which paints the current state of the game.
-				(the card deck, the card lists, and the card stacks)
+				(the card deck, the card lists, and the
+				card stacks)
 			</case>
 			<case>
 				A menu bar with a single item called "Game" that
@@ -315,14 +343,18 @@
 			<case>
 				You can implement a mouse listener which
 				allows the players to drag and place the card as
-				in a typical Windows solitaire game.
+				in
+				a typical Windows solitaire game.
 				(BUT THIS IS NOT COMPULSARY)
-				If you don't want to use a mouse listener,
+				If you don't want to use a mouse
+				listener,
 				you can allow the user to play the game by
 				using a TextField and a Button.
-				Within the TextField,
+				Within the
+				TextField,
 				the player can type in commands as in the CUI.
-				Then the player can execute the command by
+				Then the player can execute the command
+				by
 				pressing the Button.
 			</case>
 		</ui>

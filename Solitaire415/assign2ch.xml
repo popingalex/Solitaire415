@@ -127,6 +127,14 @@
 				移除牌列尾部的牌，如果有必要，翻开余下牌列的最后一张
 			</method>
 		</class>
+		<class className="CardStack">
+			<field fieldName="stack">
+				牌栈
+            </field>
+			<method methodName="add" parameter="Card c">
+				在规则允许的情况下将纸牌放到牌栈顶部
+            </method>
+		</class>
 		<class className="PaintingPanel">
 			<method methodName="paintComponent" parameter="Graphics g">
 				绘制游戏界面
