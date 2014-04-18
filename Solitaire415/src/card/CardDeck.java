@@ -17,6 +17,15 @@ public class CardDeck {
      */
     private Card currentCard;
 
+    
+    
+    public LinkedList<Card> getCards() {
+        return cards;
+    }
+    public Card getCurrentCard() {
+        return currentCard;
+    }
+    
     public CardDeck() {
         cards = new LinkedList<Card>();
         currentCard = null;
@@ -35,12 +44,14 @@ public class CardDeck {
      * @return
      */
     public Card drawCard() {
-        if(cards.size()>1) {
+        Card temp = currentCard;
+        
+        if(cards.size()>0) {
             int index = cards.indexOf(currentCard);
-            index = (index+1)%cards.size();
-            currentCard = cards.get(index);
+            index = (index + (cards.size()+1) -1 +1) %(cards.size()+1)-1;
+            currentCard = index<0 ? null:cards.get(index);
         }
-        return currentCard;
+        return temp;
     }
     
     /**

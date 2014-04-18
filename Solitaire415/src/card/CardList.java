@@ -20,8 +20,19 @@ public class CardList {
      */
     private Card tailCard;
 
+    public LinkedList<Card> getCards() {
+        return cards;
+    }
+    public int getOpenedIndex() {
+        return openedIndex;
+    }
+    public Card getTailCard() {
+        return tailCard;
+    }
+
     public CardList() {
         cards = new LinkedList<Card>();
+        openedIndex = -1;
     }
     public void init(LinkedList<Card> cards, int openedIndex) {
         this.cards.clear();
@@ -38,16 +49,23 @@ public class CardList {
      * @param index
      * @return
      */
-    public LinkedList<Card> cut(int index) {
+    public CardList cut(int index) {
+        CardList childList = new CardList();
         if(index <0 || index >= cards.size() || index < openedIndex)
-            return new LinkedList<Card>();
-        LinkedList<Card> child = new LinkedList<Card>();
-        child.addAll(index, cards);
-        cards.removeAll(child);
-        if(openedIndex == cards.size())
-            openedIndex--;
+            return childList;
+        LinkedList<Card> childCards = new LinkedList<Card>();
+        childCards.addAll(cards.subList(index, cards.size()));
+        cards.removeAll(childCards);
         tailCard = cards.get(cards.size()-1);
-        return child;
+        
+        if(index>openedIndex) {
+            childList.init(childCards, 0);
+        } else {
+            childList.init(childCards, openedIndex-index);
+            if(openedIndex == index)
+                openedIndex--;
+        }
+        return childList;
     }
     /**
      * Join this list to the tail of the other list,
@@ -56,7 +74,8 @@ public class CardList {
      */
     public void link(CardList other) {
         if(
-                cards.getLast().getValue().compareTo(other.cards.getFirst().getValue())==1 && 
+                other.openedIndex==0 &&
+                cards.getLast().getValue().compareTo(other.cards.getFirst().getValue())==1 &&
                 cards.getLast().getColour().compareTo(other.cards.getFirst().getColour())==0) {
             cards.addAll(other.cards);
             this.tailCard = cards.getLast();
@@ -71,7 +90,7 @@ public class CardList {
         if(
                 cards.getLast().getValue().compareTo(c.getValue())==1 && 
                 cards.getLast().getColour().compareTo(c.getColour())==0) {
-            this.add(c);
+            this.cards.add(c);
             tailCard = c;
         }
     }
@@ -90,9 +109,5 @@ public class CardList {
         if(cards.size()>0)
             tailCard = cards.getLast();
         return temp;
-    }
-    
-    public static void main(String[] args) {
-        
     }
 }
