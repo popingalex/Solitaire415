@@ -1,6 +1,6 @@
 package card;
 
-public enum Suit {
+public enum ESuit {
     Heart,
     Club,
     Diomand,

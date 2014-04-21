@@ -156,10 +156,10 @@ public class CardListTest extends TestCase {
                 cards[6],
                 cards[5],
                 })), 3);
-        cardList.add(cards[4]);
+        cardList.add(cards[13*2+4]);
         assertEquals("step1", 5, cardList.getCards().size());
         assertEquals("step2", 3, cardList.getOpenedIndex());
-        assertEquals("step3", cards[4], cardList.moveTail());
+        assertEquals("step3", cards[13*2+4], cardList.moveTail());
     }
     public void testAdd2() {
         CardList cardList = new CardList();
@@ -169,7 +169,7 @@ public class CardListTest extends TestCase {
                 cards[6],
                 cards[5],
                 })), 3);
-        cardList.add(cards[7]);
+        cardList.add(cards[13*2+7]);
         assertEquals("step1", 4, cardList.getCards().size());
         assertEquals("step2", 3, cardList.getOpenedIndex());
         assertEquals("step3", cards[5], cardList.moveTail());

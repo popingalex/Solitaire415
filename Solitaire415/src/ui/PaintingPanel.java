@@ -1,20 +1,24 @@
 package ui;
 
 import java.awt.Graphics;
+
+import solitaire.ICommandListener;
+import solitaire.Solitaire;
 /**
  * 
- * Should create a new Solitaire, then call showGUI,
- * passing the newly-created Solitaire object to it.
- * Lastly, should call the Solitaire object's
- * startGame method.
  * @author [sign your own name]
  */
 public class PaintingPanel {
     /**
-     * Should create a GUI and display the game.
+     * Draw the game stored in game.
      * @param g
      */
     public void paintComponent(Graphics g) {
         // TODO Auto-generated method stub
+    }
+
+    public void addCommandListener(ICommandListener game) {
+        // TODO Auto-generated method stub
+        
     }
 }

@@ -1,6 +1,6 @@
 package card;
 
-public enum Colour {
+public enum EColour {
     Red,
     Black
 }

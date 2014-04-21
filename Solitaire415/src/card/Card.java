@@ -21,16 +21,16 @@ public class Card {
      * Returns the card's suit.
      * @return
      */
-    public Suit getSuit() {
+    public ESuit getSuit() {
         switch ((cardIndex-1)/13+1) {
         case 1:
-            return Suit.Heart;
+            return ESuit.Heart;
         case 2:
-            return Suit.Diomand;
+            return ESuit.Diomand;
         case 3:
-            return Suit.Spade;
+            return ESuit.Spade;
         case 4:
-            return Suit.Club;
+            return ESuit.Club;
         default:
             return null;
         }
@@ -39,22 +39,22 @@ public class Card {
      * Returns the card's value (such as 10, king, etc).
      * @return
      */
-    public Value getValue() {
-        return Value.valueOf((cardIndex-1)%13+1);
+    public EValue getValue() {
+        return EValue.valueOf((cardIndex-1)%13+1);
     }
     /**
      * The colour of the card is 'red' if this card is a heart or diamond,
      * and 'black' otherwise.
      * @return
      */
-    public Colour getColour() {
+    public EColour getColour() {
         switch (getSuit()) {
         case Heart:
         case Diomand:
-            return Colour.Red;
+            return EColour.Red;
         case Spade:
         case Club:
-            return Colour.Black;
+            return EColour.Black;
         default:
             return null;
         }

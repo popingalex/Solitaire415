@@ -89,7 +89,7 @@ public class CardList {
     public void add(Card c) {
         if(
                 cards.getLast().getValue().compareTo(c.getValue())==1 && 
-                cards.getLast().getColour().compareTo(c.getColour())==0) {
+                cards.getLast().getColour().compareTo(c.getColour())!=0) {
             this.cards.add(c);
             tailCard = c;
         }

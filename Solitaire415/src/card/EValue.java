@@ -1,6 +1,6 @@
 package card;
 
-public enum Value {
+public enum EValue {
     Ace,
     Two,
     Three,
@@ -15,7 +15,7 @@ public enum Value {
     Queen,
     King;
 
-    public static Value valueOf(int value) {
+    public static EValue valueOf(int value) {
         switch (value) {
         case 1:
             return Ace;
