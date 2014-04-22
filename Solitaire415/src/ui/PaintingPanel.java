@@ -3,7 +3,6 @@ package ui;
 import java.awt.Graphics;
 
 import solitaire.ICommandListener;
-import solitaire.Solitaire;
 /**
  * 
  * @author [sign your own name]

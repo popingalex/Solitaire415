@@ -1,5 +1,6 @@
 package solitaire;
 
 public enum ShuffleStrategy {
-    Fisher_Yates
+    Fisher_Yates,
+    Java_Shuffle
 }

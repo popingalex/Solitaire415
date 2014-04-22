@@ -1,5 +1,6 @@
 package solitaire;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 import card.Card;
@@ -7,10 +8,15 @@ import card.Card;
 public class Shuffler {
     
     public static void shuffle(LinkedList<Card> cardLink) {
-        shuffle(cardLink, ShuffleStrategy.Fisher_Yates);
+        shuffle(cardLink, ShuffleStrategy.Java_Shuffle);
     }
     public static void shuffle(LinkedList<Card> cardLink, ShuffleStrategy strategy) {
-        // TODO Auto-generated method stub
-        
+        switch (strategy) {
+        case Fisher_Yates:
+            break;
+        case Java_Shuffle:
+            Collections.shuffle(cardLink);
+            break;
+        }
     }
 }

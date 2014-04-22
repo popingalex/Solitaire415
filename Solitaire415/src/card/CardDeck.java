@@ -1,6 +1,7 @@
 package card;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 
@@ -34,7 +35,7 @@ public class CardDeck {
      * when renew game, clear deck, fill new deck Cards.
      * @param cards
      */
-    public void init(LinkedList<Card> cards) {
+    public void init(List<Card> cards) {
         this.cards.clear();
         this.cards.addAll(cards);
     }

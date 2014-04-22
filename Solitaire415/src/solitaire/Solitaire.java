@@ -2,6 +2,10 @@ package solitaire;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+
+import com.sun.security.jgss.InquireType;
 
 import ui.PaintingPanel;
 import card.Card;
@@ -80,9 +84,52 @@ public class Solitaire implements ICommandListener {
      * return a warning instead.
      * @param command
      */
-    public void executeCommand(String command) {
-        // TODO Auto-generated method stub
+    public EResult executeCommand(String commandString) {
+        String paramString = null;
+        if(commandString.indexOf(' ')>0) {
+            paramString = commandString.substring(commandString.indexOf(' ')+1);
+            commandString = commandString.substring(0, commandString.indexOf(' '));
+        }
+            
+        ECommand command = ECommand.valueOfIgnoreCase(commandString);
+        if(command==null) {
+            return EResult.Unresolvable;
+        }
+        switch (command) {
+        case DrawCard:
+            deck.drawCard();
+            break;
+        case Restart:
+            gameState = GameState.Prepare;
+            break;
+        case DeckTo:
+        {
+            if(paramString==null)
+                return EResult.IllegalCommand;
+            int listIndex = Integer.getInteger(paramString, 0);
+            if(listIndex<1||listIndex>7)
+                return EResult.IllegalCommand;
+            Card deckCard = deck.getCurrentCard();
+            if(deckCard==null)
+                return EResult.Impossible;
+            if(lists[3].add(deckCard) == EResult.Impossible)
+                return EResult.Impossible;
+            deck.takeCard();
+            break;
+        }
+        case Send:
+            Card card = Card.parse(paramString);
+            if(card==null)
+                return EResult.IllegalCommand;
 
+            break;
+        case Link:
+            break;
+        case Quit:
+            gameState = GameState.Closing;
+            break;
+        }
+        return EResult.Welldone;
     }
     /**
      * Runs a loop that accepts commands
@@ -95,31 +142,57 @@ public class Solitaire implements ICommandListener {
         while(gameState != GameState.Closed) {
             switch (gameState) {
             case Prepare://prepare for a new game
-                LinkedList<Card> cardLink = new LinkedList<Card>();
-                cardLink.addAll(Arrays.asList(cards));
-                Shuffler.shuffle(cardLink);
-                deck.init(cardLink);
+                prepare();
                 break;
             case Looping://loop a game
-                //deal with command
-                if(command != null) {
-                    executeCommand(command);
-                    command = null;
-                }
+                loop();
                 break;
             case Closing://closing the game
-                
+                close();
                 break;
             case Closed://here's a No Man Land
                 break;
             }
         }
     }
+    private void close() {
+        gameState = GameState.Closed;
+    }
+
+    private void loop() {
+        //run the clock ?
+        //        System.out.println("yo");
+        Scanner scanner = new Scanner(System.in);
+        String command = scanner.nextLine();
+        executeCommand(command);
+    }
+
+    private void prepare() {
+        LinkedList<Card> cardLink = new LinkedList<Card>();
+        cardLink.addAll(Arrays.asList(cards));
+        Shuffler.shuffle(cardLink);
+
+        int index = 0;
+
+        for(int i=0;i<4;i++) {
+            stacks[i].init();
+        }
+        for(int i=0;i<7;i++) {
+            List<Card> subList = cardLink.subList(index, index+i+1);
+            lists[i].init(subList, i);
+            subList.clear();
+            index+=i+1;
+        }
+        deck.init(cardLink);
+
+        gameState = GameState.Looping;
+    }
+
     @Override
-    public void handleCommand(String command) {
+    public synchronized EResult handleCommand(String command) {
         // TODO Auto-generated method stub
-        while(command!=null);
-        //judge
-        this.command = command;
+        if(gameState!=GameState.Looping)
+            return EResult.Refused;
+        return executeCommand(command);
     }
 }

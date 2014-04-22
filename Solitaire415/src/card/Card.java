@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
  *
  */
 public class Card {
+    public final static String CARD = "Card";
     /**
      * The card's index, from 1 to 52.
      */
@@ -85,5 +86,9 @@ public class Card {
         // TODO Auto-generated method stub
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawString(this.toString(), 20, 20);
+    }
+    public static Card parse(String cardString) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

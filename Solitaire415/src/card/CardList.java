@@ -1,6 +1,9 @@
 package card;
 
 import java.util.LinkedList;
+import java.util.List;
+
+import solitaire.EResult;
 /**
  * 
  * @author [sign your own name]
@@ -34,12 +37,12 @@ public class CardList {
         cards = new LinkedList<Card>();
         openedIndex = -1;
     }
-    public void init(LinkedList<Card> cards, int openedIndex) {
+    public void init(List<Card> cards, int openedIndex) {
         this.cards.clear();
         this.cards.addAll(cards);
         this.openedIndex = openedIndex;
         if(!this.cards.isEmpty()) {
-            tailCard = cards.getLast();
+            tailCard = this.cards.getLast();
             openedIndex = cards.size()-1;
         }
     }
@@ -57,7 +60,7 @@ public class CardList {
         childCards.addAll(cards.subList(index, cards.size()));
         cards.removeAll(childCards);
         tailCard = cards.get(cards.size()-1);
-        
+
         if(index>openedIndex) {
             childList.init(childCards, 0);
         } else {
@@ -86,13 +89,15 @@ public class CardList {
      * if the rules allow this.
      * @param c
      */
-    public void add(Card c) {
-        if(
+    public EResult add(Card c) {
+        if(cards.size()==0 ||
                 cards.getLast().getValue().compareTo(c.getValue())==1 && 
                 cards.getLast().getColour().compareTo(c.getColour())!=0) {
             this.cards.add(c);
             tailCard = c;
+            return EResult.Welldone;
         }
+        return EResult.Impossible;
     }
     /**
      * Delete and return the tail card.
