@@ -77,11 +77,11 @@ public class CardList {
      */
     public void link(CardList other) {
         if(
-                other.openedIndex==0 &&
-                cards.getLast().getValue().compareTo(other.cards.getFirst().getValue())==1 &&
-                cards.getLast().getColour().compareTo(other.cards.getFirst().getColour())==0) {
-            cards.addAll(other.cards);
-            this.tailCard = cards.getLast();
+                this.openedIndex==0 &&
+                other.cards.getLast().getValue().compareTo(cards.getFirst().getValue())==1 &&
+                other.cards.getLast().getColour().compareTo(cards.getFirst().getColour())!=0) {
+            other.cards.addAll(cards);
+            other.tailCard = cards.getLast();
         }
     }
     /**
@@ -114,5 +114,9 @@ public class CardList {
         if(cards.size()>0)
             tailCard = cards.getLast();
         return temp;
+    }
+    public int indexOf(Card card) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

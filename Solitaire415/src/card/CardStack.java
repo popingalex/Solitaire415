@@ -2,6 +2,8 @@ package card;
 
 import java.util.Stack;
 
+import solitaire.EResult;
+
 /**
  * 
  * @author [sign your own name]
@@ -27,11 +29,13 @@ public class CardStack {
 	 * Adds c to the top of the stack, if the rules allow this.
 	 * @return
 	 */
-	public void add(Card c) {
+	public EResult add(Card c) {
 		if((stack.size()==0 && c.getValue()==EValue.King) ||
 				stack.lastElement().getValue().compareTo(c.getValue())==1 && 
 				stack.lastElement().getSuit().compareTo(c.getSuit())==0) {
 			this.stack.add(c);
+			return EResult.Welldone;
 		}
+		return EResult.Impossible;
 	}
 }

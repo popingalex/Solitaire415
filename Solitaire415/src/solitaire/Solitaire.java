@@ -5,9 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.sun.security.jgss.InquireType;
-
 import ui.PaintingPanel;
+import ui.PrintConsole;
 import card.Card;
 import card.CardDeck;
 import card.CardList;
@@ -40,8 +39,8 @@ public class Solitaire implements ICommandListener {
      */
     private GameState gameState;
 
-    private String command;
     private PaintingPanel gui;
+    private PrintConsole cui;
     public static void main(String[] args) {
         Solitaire solitaire = new Solitaire();
         Solitaire.showGUI(solitaire);
@@ -90,7 +89,7 @@ public class Solitaire implements ICommandListener {
             paramString = commandString.substring(commandString.indexOf(' ')+1);
             commandString = commandString.substring(0, commandString.indexOf(' '));
         }
-            
+
         ECommand command = ECommand.valueOfIgnoreCase(commandString);
         if(command==null) {
             return EResult.Unresolvable;
@@ -109,28 +108,78 @@ public class Solitaire implements ICommandListener {
             int listIndex = Integer.getInteger(paramString, 0);
             if(listIndex<1||listIndex>7)
                 return EResult.IllegalCommand;
-            Card deckCard = deck.getCurrentCard();
-            if(deckCard==null)
-                return EResult.Impossible;
-            if(lists[3].add(deckCard) == EResult.Impossible)
-                return EResult.Impossible;
-            deck.takeCard();
-            break;
+            
+            return deckTo(listIndex);
         }
         case Send:
+        {
+            if(paramString==null)
+                return EResult.IllegalCommand;
             Card card = Card.parse(paramString);
             if(card==null)
                 return EResult.IllegalCommand;
 
-            break;
+            return send(card);
+        }
         case Link:
-            break;
+        {
+            if(paramString==null)
+                return EResult.IllegalCommand;
+            int index = paramString.indexOf(' ');
+            
+            if(index<0)
+                return EResult.IllegalCommand;
+            Card card = Card.parse(paramString.substring(0, index));
+            int listIndex = Integer.getInteger(paramString.substring(index+1));
+            if(card==null || listIndex <1 || listIndex > 7)
+                return EResult.IllegalCommand;
+            
+            return link(card, listIndex);
+        }
         case Quit:
             gameState = GameState.Closing;
             break;
         }
         return EResult.Welldone;
     }
+    private EResult link(Card card, int listIndex) {
+        CardList cut = null;
+        for(int i=0;i<7;i++) {
+            int cardIndex = lists[i].indexOf(card);
+            if(cardIndex<0)
+                continue;
+            if(cardIndex >= lists[i].getOpenedIndex() && 
+                    lists[listIndex].getTailCard().getValue().compareTo(card.getValue())==1 &&
+                    lists[listIndex].getTailCard().getColour().compareTo(card.getColour())!=0) {
+                
+                cut = lists[i].cut(cardIndex);
+                break;
+            }
+            return EResult.Impossible;
+        }
+        if(cut==null)
+            return EResult.Impossible;
+        return EResult.Welldone;
+    }
+
+    private EResult send(Card card) {
+        int index = card.getSuit().ordinal();
+        CardStack stack = stacks[index];
+        if(stack.add(card)==EResult.Impossible)
+            return EResult.Impossible;
+        return EResult.Welldone;
+    }
+
+    private EResult deckTo(int listIndex) {
+        Card deckCard = deck.getCurrentCard();
+        if(deckCard==null)
+            return EResult.Impossible;
+        if(lists[3].add(deckCard) == EResult.Impossible)
+            return EResult.Impossible;
+        deck.takeCard();
+        return EResult.Welldone;
+    }
+
     /**
      * Runs a loop that accepts commands
      * until either a quit command is given or the player wins.
