@@ -2,6 +2,7 @@ package card;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.HashMap;
 
 /**
  * 
@@ -10,13 +11,21 @@ import java.awt.Graphics2D;
  */
 public class Card {
     public final static String CARD = "Card";
+    private static HashMap<Integer, Integer> cardMap = new HashMap<Integer, Integer>();
     /**
      * The card's index, from 1 to 52.
      */
     private int cardIndex;
-    
     public Card(int cardIndex) {
         this.cardIndex = cardIndex;
+        cardMap.put(getShortName().toLowerCase().hashCode(), cardIndex-1);
+        cardMap.put(getLongName().toLowerCase().hashCode(), cardIndex-1);
+    }
+    public String getShortName() {
+        return getSuit().toString()+getValue().toString();
+    }
+    public String getLongName() {
+        return getValue().toName()+" of "+getSuit().toString();
     }
     /**
      * Returns the card's suit.
@@ -27,7 +36,7 @@ public class Card {
         case 1:
             return ESuit.Heart;
         case 2:
-            return ESuit.Diomand;
+            return ESuit.Diamond;
         case 3:
             return ESuit.Spade;
         case 4:
@@ -51,7 +60,7 @@ public class Card {
     public EColour getColour() {
         switch (getSuit()) {
         case Heart:
-        case Diomand:
+        case Diamond:
             return EColour.Red;
         case Spade:
         case Club:
@@ -87,8 +96,8 @@ public class Card {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawString(this.toString(), 20, 20);
     }
-    public static Card parse(String cardString) {
-        // TODO Auto-generated method stub
-        return null;
+    public static int indexOf(String cardString) {
+        Integer index = cardMap.get(cardString.toLowerCase().hashCode());
+        return index==null?-1:index.intValue();
     }
 }

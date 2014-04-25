@@ -2,21 +2,22 @@ package ui;
 
 import java.awt.Graphics;
 
-import solitaire.ICommandListener;
+import solitaire.ICommandReceiver;
 /**
  * 
  * @author [sign your own name]
  */
-public class PaintingPanel {
+public class PaintingPanel extends AbstractUI {
     /**
      * Draw the game stored in game.
      * @param g
      */
-    public void paintComponent(Graphics g) {
+    private void paintComponent(Graphics g) {
         // TODO Auto-generated method stub
     }
 
-    public void addCommandListener(ICommandListener game) {
+    @Override
+    public void refresh() {
         // TODO Auto-generated method stub
         
     }

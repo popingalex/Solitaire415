@@ -30,8 +30,9 @@ public class CardStack {
 	 * @return
 	 */
 	public EResult add(Card c) {
-		if((stack.size()==0 && c.getValue()==EValue.King) ||
-				stack.lastElement().getValue().compareTo(c.getValue())==1 && 
+		if((stack.size()==0 && c.getValue()==EValue.Ace) ||
+		        stack.size()>0 &&
+				stack.lastElement().getValue().compareTo(c.getValue())==-1 && 
 				stack.lastElement().getSuit().compareTo(c.getSuit())==0) {
 			this.stack.add(c);
 			return EResult.Welldone;

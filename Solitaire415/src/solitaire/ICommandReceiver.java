@@ -1,7 +1,7 @@
 package solitaire;
 
 
-public interface ICommandListener {
+public interface ICommandReceiver {
 
     EResult handleCommand(String command);
 

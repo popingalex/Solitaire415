@@ -2,7 +2,7 @@ package card;
 
 public enum ESuit {
     Heart,
-    Diomand,
+    Diamond,
     Spade,
     Club,
 }

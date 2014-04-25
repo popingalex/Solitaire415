@@ -68,7 +68,7 @@ public class CardDeck {
         if(index==0)
             currentCard = null;
         else {
-            index = (index-1);
+            index = (index+1)%cards.size();
             currentCard = cards.get(index);
         }
         cards.remove(temp);

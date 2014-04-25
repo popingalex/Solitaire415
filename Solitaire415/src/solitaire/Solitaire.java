@@ -5,8 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+import ui.CommandConsole;
+import ui.IDataSource;
 import ui.PaintingPanel;
-import ui.PrintConsole;
+import ui.AbstractUI;
 import card.Card;
 import card.CardDeck;
 import card.CardList;
@@ -16,7 +18,7 @@ import card.CardStack;
  * This is the main class of the game.
  * @author [sign your own name]
  */
-public class Solitaire implements ICommandListener {
+public class Solitaire implements ICommandReceiver, IDataSource {
     private Card[] cards;
     /**
      * A CardDeck for the current game's deck.
@@ -39,13 +41,14 @@ public class Solitaire implements ICommandListener {
      */
     private GameState gameState;
 
-    private PaintingPanel gui;
-    private PrintConsole cui;
+    private AbstractUI ui;
     public static void main(String[] args) {
         Solitaire solitaire = new Solitaire();
-        Solitaire.showGUI(solitaire);
+        //        Solitaire.showGUI(solitaire);
+        Solitaire.showCUI(solitaire);
         solitaire.startGame();
     }
+
 
     public Solitaire() {
         deck = new CardDeck();
@@ -63,17 +66,24 @@ public class Solitaire implements ICommandListener {
         }
     }
 
+    private static void showCUI(Solitaire game) {
+        CommandConsole gameConsole = new CommandConsole();
+        gameConsole.addCommandReceiver(game);
+        gameConsole.addDataSouce(game);
+        game.linkUI(gameConsole);
+    }
     /**
      * Should create a GUI and display the game.
      * @param game
      */
     public static void showGUI(Solitaire game) {
         PaintingPanel gamePanel = new PaintingPanel();
-        gamePanel.addCommandListener(game);
-        game.linkGUI(gamePanel);
+        gamePanel.addCommandReceiver(game);
+        gamePanel.addDataSouce(game);
+        game.linkUI(gamePanel);
     }
-    private void linkGUI(PaintingPanel gamePanel) {
-        this.gui = gamePanel;
+    private void linkUI(AbstractUI ui) {
+        this.ui = ui;
     }
 
     /**
@@ -89,36 +99,44 @@ public class Solitaire implements ICommandListener {
             paramString = commandString.substring(commandString.indexOf(' ')+1);
             commandString = commandString.substring(0, commandString.indexOf(' '));
         }
-
         ECommand command = ECommand.valueOfIgnoreCase(commandString);
         if(command==null) {
             return EResult.Unresolvable;
         }
         switch (command) {
         case DrawCard:
+            System.out.println("draw");
             deck.drawCard();
             break;
         case Restart:
+            System.out.println("rest");
             gameState = GameState.Prepare;
             break;
         case DeckTo:
         {
             if(paramString==null)
                 return EResult.IllegalCommand;
-            int listIndex = Integer.getInteger(paramString, 0);
+            int listIndex;
+            try {
+                listIndex = Integer.valueOf(paramString);
+            } catch (NumberFormatException e) {
+                listIndex = 0;
+            }
             if(listIndex<1||listIndex>7)
                 return EResult.IllegalCommand;
-            
-            return deckTo(listIndex);
+            System.out.println("deck "+listIndex);
+            return deckTo(listIndex-1);
         }
         case Send:
         {
             if(paramString==null)
                 return EResult.IllegalCommand;
-            Card card = Card.parse(paramString);
+            int cardIndex = Card.indexOf(paramString);
+            if(cardIndex<0)
+                return EResult.IllegalCommand;
+            Card card = cards[cardIndex];
             if(card==null)
                 return EResult.IllegalCommand;
-
             return send(card);
         }
         case Link:
@@ -126,15 +144,25 @@ public class Solitaire implements ICommandListener {
             if(paramString==null)
                 return EResult.IllegalCommand;
             int index = paramString.indexOf(' ');
-            
+
             if(index<0)
                 return EResult.IllegalCommand;
-            Card card = Card.parse(paramString.substring(0, index));
-            int listIndex = Integer.getInteger(paramString.substring(index+1));
+            int cardIndex = Card.indexOf(paramString.substring(0, index));
+            if(cardIndex<0)
+                return EResult.IllegalCommand;
+            Card card = cards[cardIndex];
+            int listIndex;
+            try {
+                listIndex = Integer.valueOf(paramString.substring(index+1));
+            } catch (NumberFormatException e) {
+                listIndex = 0;
+            }
+            if(listIndex<1||listIndex>7)
+                return EResult.IllegalCommand;
             if(card==null || listIndex <1 || listIndex > 7)
                 return EResult.IllegalCommand;
-            
-            return link(card, listIndex);
+
+            return link(card, listIndex-1);
         }
         case Quit:
             gameState = GameState.Closing;
@@ -148,10 +176,11 @@ public class Solitaire implements ICommandListener {
             int cardIndex = lists[i].indexOf(card);
             if(cardIndex<0)
                 continue;
+            System.out.println("link "+card+" to "+lists[listIndex].getTailCard());
             if(cardIndex >= lists[i].getOpenedIndex() && 
                     lists[listIndex].getTailCard().getValue().compareTo(card.getValue())==1 &&
                     lists[listIndex].getTailCard().getColour().compareTo(card.getColour())!=0) {
-                
+
                 cut = lists[i].cut(cardIndex);
                 break;
             }
@@ -165,16 +194,24 @@ public class Solitaire implements ICommandListener {
     private EResult send(Card card) {
         int index = card.getSuit().ordinal();
         CardStack stack = stacks[index];
-        if(stack.add(card)==EResult.Impossible)
-            return EResult.Impossible;
-        return EResult.Welldone;
+        System.out.println("send "+card);
+        for(int i=0;i<7;i++) {
+            if(lists[i].getTailCard().equals(card)) {
+                if(stack.add(card)==EResult.Impossible)
+                    break;
+                lists[i].moveTail();
+                return EResult.Welldone;
+            }
+        }
+        return EResult.Impossible;
     }
 
     private EResult deckTo(int listIndex) {
         Card deckCard = deck.getCurrentCard();
+        System.out.println("deck "+deckCard+" to "+lists[listIndex].getTailCard());
         if(deckCard==null)
             return EResult.Impossible;
-        if(lists[3].add(deckCard) == EResult.Impossible)
+        if(lists[listIndex].add(deckCard) == EResult.Impossible)
             return EResult.Impossible;
         deck.takeCard();
         return EResult.Welldone;
@@ -210,10 +247,11 @@ public class Solitaire implements ICommandListener {
 
     private void loop() {
         //run the clock ?
-        //        System.out.println("yo");
+        ui.refresh();
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
-        executeCommand(command);
+        EResult result = executeCommand(command);
+        System.out.println(command+"->"+result);
     }
 
     private void prepare() {
@@ -243,5 +281,19 @@ public class Solitaire implements ICommandListener {
         if(gameState!=GameState.Looping)
             return EResult.Refused;
         return executeCommand(command);
+    }
+
+
+    @Override
+    public CardDeck getDeckData() {
+        return deck;
+    }
+    @Override
+    public CardList[] getListData() {
+        return lists;
+    }
+    @Override
+    public CardStack[] getStackData() {
+        return stacks;
     }
 }

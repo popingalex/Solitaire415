@@ -59,7 +59,7 @@ public class CardList {
         LinkedList<Card> childCards = new LinkedList<Card>();
         childCards.addAll(cards.subList(index, cards.size()));
         cards.removeAll(childCards);
-        tailCard = cards.get(cards.size()-1);
+        tailCard = cards.size()>0?cards.get(cards.size()-1):null;
 
         if(index>openedIndex) {
             childList.init(childCards, 0);

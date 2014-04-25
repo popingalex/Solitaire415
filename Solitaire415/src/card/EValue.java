@@ -70,7 +70,10 @@ public enum EValue {
         case Ten:
             return "10";
         default:
-            return super.toString();
+            return super.toString().substring(0, 1);
         }
+    }
+    public String toName() {
+        return super.toString();
     }
 }
