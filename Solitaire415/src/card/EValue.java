@@ -1,5 +1,8 @@
 package card;
 
+/**
+ * @author Alex
+ */
 public enum EValue {
     Ace,
     Two,
@@ -15,33 +18,33 @@ public enum EValue {
     Queen,
     King;
 
-    public static EValue valueOf(int value) {
-        switch (value) {
-        case 1:
+    public static EValue getValue(int cardIndex) {
+        switch ((cardIndex-1)%13) {
+        case 0:
             return Ace;
-        case 2:
+        case 1:
             return Two;
-        case 3:
+        case 2:
             return Three;
-        case 4:
+        case 3:
             return Four;
-        case 5:
+        case 4:
             return Five;
-        case 6:
+        case 5:
             return Six;
-        case 7:
+        case 6:
             return Seven;
-        case 8:
+        case 7:
             return Eight;
-        case 9:
+        case 8:
             return Nine;
-        case 10:
+        case 9:
             return Ten;
-        case 11:
+        case 10:
             return Jack;
-        case 12:
+        case 11:
             return Queen;
-        case 13:
+        case 12:
             return King;
         default:
             return null;
@@ -73,6 +76,7 @@ public enum EValue {
             return super.toString().substring(0, 1);
         }
     }
+
     public String toName() {
         return super.toString();
     }

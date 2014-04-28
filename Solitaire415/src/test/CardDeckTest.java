@@ -26,7 +26,7 @@ public class CardDeckTest extends TestCase{
                 cards[5],
                 cards[7],
                 })));
-        assertEquals("step1", 4, cardDeck.getCards().size());
+        assertEquals("step1", 4, cardDeck.countCards());
         assertNull("step2", cardDeck.getCurrentCard());
         //==========
     }

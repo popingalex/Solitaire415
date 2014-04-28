@@ -5,21 +5,21 @@ import java.util.Stack;
 import solitaire.EResult;
 
 /**
- * 
- * @author [sign your own name]
- *
+ * @author Alex
  */
 public class CardStack {
 	/**
 	 * A stack to store the cards.
 	 */
 	private Stack<Card> stack;
-
+	/**
+	 * get cards
+	 * @return all cards
+	 */
 	public Stack<Card> getStack() {
-		return stack;
-	}
-
-	public CardStack() {
+        return stack;
+    }
+    public CardStack() {
 		stack = new Stack<Card>();
 	}
 	public void init() {

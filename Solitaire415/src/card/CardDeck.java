@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * 
- * @author [sign your own name]
+ * @author Alex
  *
  */
 public class CardDeck {
@@ -18,19 +18,19 @@ public class CardDeck {
      */
     private Card currentCard;
 
-    
-    
-    public LinkedList<Card> getCards() {
-        return cards;
+    public int countCards() {
+        return cards.size();
     }
+
     public Card getCurrentCard() {
         return currentCard;
     }
-    
+
     public CardDeck() {
         cards = new LinkedList<Card>();
         currentCard = null;
     }
+
     /**
      * when renew game, clear deck, fill new deck Cards.
      * @param cards
@@ -39,14 +39,14 @@ public class CardDeck {
         this.cards.clear();
         this.cards.addAll(cards);
     }
-    
+
     /**
      * Open the next card, if this is the tail card, return null.
      * @return
      */
     public Card drawCard() {
         Card temp = currentCard;
-        
+
         if(cards.size()>0) {
             int index = cards.indexOf(currentCard);
             index = (index + (cards.size()+1) -1 +1) %(cards.size()+1)-1;
@@ -54,7 +54,7 @@ public class CardDeck {
         }
         return temp;
     }
-    
+
     /**
      * Delete and return the current card 
      * (so we can place it in a list or a stack).

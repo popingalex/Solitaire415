@@ -14,21 +14,32 @@ public class CardList {
      * A linked list to store the cards in this list.
      */
     LinkedList<Card> cards;
+
     /**
      * The index of the first opened card.
      */
     private int openedIndex;
+
     /**
      * The tail card.
      */
     private Card tailCard;
 
-    public LinkedList<Card> getCards() {
-        return cards;
+    /**
+     * get all viaul cards
+     * @return
+     */
+    public List<Card> getVisualCards() {
+        return cards.subList(openedIndex, cards.size());
     }
+    /**
+     * get the index of last visual card
+     * @return
+     */
     public int getOpenedIndex() {
         return openedIndex;
     }
+    
     public Card getTailCard() {
         return tailCard;
     }
