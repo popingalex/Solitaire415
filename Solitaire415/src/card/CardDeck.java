@@ -9,69 +9,68 @@ import java.util.List;
  *
  */
 public class CardDeck {
+    public Card getCard(int index) {
+        return (index<currentIndex || index==cards.size()) ? null : cards.get(index);
+    }
+    
+    public int countFaces() {
+        return cards.size()-currentIndex;
+    }
+    
+    public int countBacks() {
+        return currentIndex;
+    }
+    //==============================
     /**
-     * A circularly-linked list storing all the cards in the deck.
-     */
-    private LinkedList<Card> cards;
-    /**
-     * The current card.
-     */
-    private Card currentCard;
+	 * A circularly-linked list storing all the cards in the deck.
+	 */
+	private LinkedList<Card> cards;
 
-    public int countCards() {
-        return cards.size();
-    }
+	private Card currentCard;
 
-    public Card getCurrentCard() {
-        return currentCard;
-    }
+	private int currentIndex;
 
-    public CardDeck() {
-        cards = new LinkedList<Card>();
-        currentCard = null;
-    }
+	public Card getCurrentCard() {
+		return currentCard;
+	}
 
-    /**
-     * when renew game, clear deck, fill new deck Cards.
-     * @param cards
-     */
-    public void init(List<Card> cards) {
-        this.cards.clear();
-        this.cards.addAll(cards);
-    }
+	public CardDeck() {
+		cards = new LinkedList<Card>();
+		currentCard = null;
+		currentIndex = 0;
+	}
 
-    /**
-     * Open the next card, if this is the tail card, return null.
-     * @return
-     */
-    public Card drawCard() {
-        Card temp = currentCard;
+	/**
+	 * when renew game, clear deck, fill new deck Cards.
+	 * @param cards
+	 */
+	public void init(List<Card> cards) {
+		this.cards.clear();
+		this.cards.addAll(cards);
+		this.currentIndex = cards.size();
+	}
 
-        if(cards.size()>0) {
-            int index = cards.indexOf(currentCard);
-            index = (index + (cards.size()+1) -1 +1) %(cards.size()+1)-1;
-            currentCard = index<0 ? null:cards.get(index);
-        }
-        return temp;
-    }
+	/**
+	 * Open the next card, if this is the tail card, return null.
+	 * @return
+	 */
+	public Card drawCard() {
+		Card current = currentCard;
+		currentIndex = (currentIndex + cards.size())%(cards.size()+1);
+		currentCard = currentIndex==cards.size()?null:cards.get(currentIndex);
+		return current;
+	}
 
-    /**
-     * Delete and return the current card 
-     * (so we can place it in a list or a stack).
-     * @return
-     */
-    public Card takeCard() {
-        if(currentCard == null)
-            return null;
-        Card temp = currentCard;
-        int index = cards.indexOf(currentCard);
-        if(index==0)
-            currentCard = null;
-        else {
-            index = (index+1)%cards.size();
-            currentCard = cards.get(index);
-        }
-        cards.remove(temp);
-        return temp;
-    }
+	/**
+	 * Delete and return the current card 
+	 * (so we can place it in a list or a stack).
+	 * @return
+	 */
+	public Card takeCard() {
+		if(currentCard == null)
+			return null;
+		Card current = cards.removeLast();
+		currentCard = currentIndex==cards.size()?null:cards.get(currentIndex);
+		return current;
+	}
 }

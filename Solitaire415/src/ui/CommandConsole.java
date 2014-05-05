@@ -1,24 +1,19 @@
 package ui;
 
-
+import java.util.Arrays;
 
 
 public class CommandConsole extends AbstractUI {
-
     @Override
     public void refresh() {
-        System.out.println("deck["+dataSource.getDeckData().getCards().size()+"]:"+dataSource.getDeckData().getCurrentCard());
+        
+        
+        System.out.println("deck["+countDeckBacks()+":"+countDeckFaces()+"]:"+getDeckCard(countDeckBacks()));
         for(int i=0;i<4;i++) {
-            System.out.printf("stack%d:%s\n", i+1, dataSource.getStackData()[i].getStack());
+            System.out.printf("stack%d:%s\n", i+1, countStackFaces(i)==0?"NONE":getStackCard(countStackFaces(i)-1, i));
         }
-        try{
         for(int i=0;i<7;i++) {
-            int open = dataSource.getListData()[i].getOpenedIndex();
-            int length = dataSource.getListData()[i].getCards().size();
-            System.out.printf("list%d:%s\n", i+1, dataSource.getListData()[i].getCards().subList(open, length).toString());
-        }
-        }catch (Exception e) {
-            // TODO: handle exception
+            System.out.printf("list%d:%d:%s\n", i+1, countListBacks(i), Arrays.toString(getListCards(i)));
         }
     }
 

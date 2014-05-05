@@ -15,16 +15,23 @@ public class CardStackTest extends TestCase {
 	}
 	public void testAdd() {
 		CardStack cardStack = new CardStack();
-		cardStack.add(cards[12]);
-		assertEquals("step1", cards[12], cardStack.getStack().lastElement());
-		cardStack.add(cards[11]);
-		assertEquals("step1", cards[11], cardStack.getStack().lastElement());
-		cardStack.add(cards[8+13]);
-		assertEquals("step1", cards[11], cardStack.getStack().lastElement());
-		cardStack.add(cards[8]);
-		assertEquals("step1", cards[11], cardStack.getStack().lastElement());
-		cardStack.add(cards[10]);
-		assertEquals("step1", cards[10], cardStack.getStack().lastElement());
-        
+		
+		cardStack.add(cards[1]);
+        assertEquals(0, cardStack.countFaces());
+
+		cardStack.add(cards[0]);
+		assertEquals(cards[0], cardStack.getCard(cardStack.countFaces()-1));
+		
+		cardStack.add(cards[1]);
+        assertEquals(cards[1], cardStack.getCard(cardStack.countFaces()-1));
+
+        cardStack.add(cards[2+13]);
+        assertEquals(cards[1], cardStack.getCard(cardStack.countFaces()-1));
+
+        cardStack.add(cards[3]);
+        assertEquals(cards[1], cardStack.getCard(cardStack.countFaces()-1));
+
+        cardStack.add(cards[2]);
+        assertEquals(cards[2], cardStack.getCard(cardStack.countFaces()-1));
 	}
 }

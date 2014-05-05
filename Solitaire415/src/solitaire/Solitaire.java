@@ -251,7 +251,7 @@ public class Solitaire implements ICommandReceiver, IDataSource {
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
         EResult result = executeCommand(command);
-        System.out.println(command+"->"+result);
+        System.out.println("->"+result);
     }
 
     private void prepare() {
@@ -283,17 +283,45 @@ public class Solitaire implements ICommandReceiver, IDataSource {
         return executeCommand(command);
     }
 
-
+    //====================
+    // Interface DataSource Deck Methods
+    //====================
     @Override
-    public CardDeck getDeckData() {
-        return deck;
+    public int countDeckBacks() {
+        return deck.countBacks();
     }
     @Override
-    public CardList[] getListData() {
-        return lists;
+    public int countDeckFaces() {
+        return deck.countFaces();
     }
     @Override
-    public CardStack[] getStackData() {
-        return stacks;
+    public Card getDeckCard(int index) {
+        return deck.getCard(index);
+    }
+    //====================
+    // Interface DataSource List Methods
+    //====================
+    @Override
+    public int countListBacks(int index) {
+        return lists[index].countBacks();
+    }
+    @Override
+    public int countListFaces(int index) {
+        return lists[index].countFaces();
+    }
+    @Override
+    public Card getListCard(int indexCard, int indexList) {
+        return lists[indexList].getCard(indexCard);
+    }
+  //====================
+    // Interface DataSource Stack Methods
+    //====================
+    @Override
+    public int countStackFaces(int index) {
+        return stacks[index].countFaces();
+    }
+    @Override
+    public Card getStackCard(int indexCard, int indexStack) {
+        return stacks[indexStack].getCard(indexCard);
     }
 }

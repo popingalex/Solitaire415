@@ -14,7 +14,7 @@ public class Tester {
         suite.addTestSuite(CardDeckTest.class);
         suite.addTestSuite(CardListTest.class);
         suite.addTestSuite(CardStackTest.class);
-        
+                      
         TestRunner.run(suite);
     }
 }

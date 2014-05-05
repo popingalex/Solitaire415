@@ -9,7 +9,7 @@ import card.CardDeck;
 
 public class CardDeckTest extends TestCase{
     
-    static Card[] cards;
+    Card[] cards;
     @Override
     protected void setUp() throws Exception {
         cards = new Card[52];
@@ -26,8 +26,9 @@ public class CardDeckTest extends TestCase{
                 cards[5],
                 cards[7],
                 })));
-        assertEquals("step1", 4, cardDeck.countCards());
-        assertNull("step2", cardDeck.getCurrentCard());
+        assertEquals(4, cardDeck.countBacks());
+        assertEquals(0, cardDeck.countFaces());
+        assertNull(cardDeck.getCurrentCard());
         //==========
     }
     public void testDrawCard() {
@@ -38,25 +39,55 @@ public class CardDeckTest extends TestCase{
                 cards[5],
                 cards[7],
                 })));
-        assertNull("step1", cardDeck.getCurrentCard());
+        
+        assertNull(cardDeck.getCurrentCard());
+        assertEquals(4, cardDeck.countBacks());
+        assertEquals(0, cardDeck.countFaces());
+        
         cardDeck.drawCard();
-        assertEquals("step2", cards[7], cardDeck.getCurrentCard());
+        assertEquals(cards[7], cardDeck.getCurrentCard());
+        assertEquals(3, cardDeck.countBacks());
+        assertEquals(1, cardDeck.countFaces());
+
         cardDeck.drawCard();
-        assertEquals("step3", cards[5], cardDeck.getCurrentCard());
+        assertEquals(cards[5], cardDeck.getCurrentCard());
+        assertEquals(2, cardDeck.countBacks());
+        assertEquals(2, cardDeck.countFaces());
+        
         cardDeck.drawCard();
-        assertEquals("step4", cards[3], cardDeck.getCurrentCard());
+        assertEquals(cards[3], cardDeck.getCurrentCard());
+        assertEquals(1, cardDeck.countBacks());
+        assertEquals(3, cardDeck.countFaces());
+        
         cardDeck.drawCard();
-        assertEquals("step5", cards[1], cardDeck.getCurrentCard());
+        assertEquals(cards[1], cardDeck.getCurrentCard());
+        assertEquals(0, cardDeck.countBacks());
+        assertEquals(4, cardDeck.countFaces());
+        
         cardDeck.drawCard();
-        assertNull("step6", cardDeck.getCurrentCard());
+        assertNull(cardDeck.getCurrentCard());
+        assertEquals(4, cardDeck.countBacks());
+        assertEquals(0, cardDeck.countFaces());
+        
         cardDeck.drawCard();
-        assertEquals("step7", cards[7], cardDeck.getCurrentCard());
+        assertEquals(cards[7], cardDeck.getCurrentCard());
+        assertEquals(3, cardDeck.countBacks());
+        assertEquals(1, cardDeck.countFaces());
+
         cardDeck.drawCard();
-        assertEquals("step8", cards[5], cardDeck.getCurrentCard());
+        assertEquals(cards[5], cardDeck.getCurrentCard());
+        assertEquals(2, cardDeck.countBacks());
+        assertEquals(2, cardDeck.countFaces());
+        
         cardDeck.drawCard();
-        assertEquals("step9", cards[3], cardDeck.getCurrentCard());
+        assertEquals(cards[3], cardDeck.getCurrentCard());
+        assertEquals(1, cardDeck.countBacks());
+        assertEquals(3, cardDeck.countFaces());
+        
         cardDeck.drawCard();
-        assertEquals("step10", cards[1], cardDeck.getCurrentCard());
+        assertEquals(cards[1], cardDeck.getCurrentCard());
+        assertEquals(0, cardDeck.countBacks());
+        assertEquals(4, cardDeck.countFaces());
     }
     public void testTakeCard() {
         CardDeck cardDeck = new CardDeck();
@@ -66,12 +97,17 @@ public class CardDeckTest extends TestCase{
                 cards[5],
                 cards[7],
                 })));
-        assertNull("step1", cardDeck.takeCard());
+        assertNull(cardDeck.takeCard());
         cardDeck.drawCard();
-        assertEquals("step2", cards[7], cardDeck.takeCard());
-        assertEquals("step3", cards[5], cardDeck.takeCard());
-        assertEquals("step4", cards[3], cardDeck.takeCard());
-        assertEquals("step5", cards[1], cardDeck.takeCard());
-        assertNull("step6", cardDeck.takeCard());
+        assertEquals(cards[7], cardDeck.takeCard());
+        cardDeck.drawCard();
+        assertEquals(cards[5], cardDeck.takeCard());
+        cardDeck.drawCard();
+        assertEquals(cards[3], cardDeck.takeCard());
+        cardDeck.drawCard();
+        assertEquals(cards[1], cardDeck.takeCard());
+        assertNull(cardDeck.takeCard());
+        cardDeck.drawCard();
+        assertNull(cardDeck.takeCard());
     }
 }

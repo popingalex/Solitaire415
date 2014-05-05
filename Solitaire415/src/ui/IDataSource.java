@@ -1,11 +1,16 @@
 package ui;
 
-import card.CardDeck;
-import card.CardList;
-import card.CardStack;
+import card.Card;
 
 public interface IDataSource {
-    public CardDeck getDeckData();
-    public CardList[] getListData();
-    public CardStack[] getStackData();
+    public Card getDeckCard(int index);
+    public int countDeckBacks();
+    public int countDeckFaces();
+
+    public Card getListCard(int indexCard, int indexList);
+    public int countListBacks(int index);
+    public int countListFaces(int index);
+
+    public Card getStackCard(int indexCard, int indexStack);
+    public int countStackFaces(int index);
 }
