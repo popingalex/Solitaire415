@@ -3,7 +3,7 @@ package solitaire;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import ui.CommandConsole;
 import ui.IDataSource;
@@ -19,6 +19,13 @@ import card.CardStack;
  * @author [sign your own name]
  */
 public class Solitaire implements ICommandReceiver, IDataSource {
+    public static boolean DEBUG_STRICT = true;
+    private GameState gameState;
+
+    private AbstractUI ui;
+
+    private LinkedBlockingQueue<String> commandQueue = new LinkedBlockingQueue<String>();
+    //====================
     private Card[] cards;
     /**
      * A CardDeck for the current game's deck.
@@ -39,13 +46,11 @@ public class Solitaire implements ICommandReceiver, IDataSource {
      * startGame method.
      * @param args
      */
-    private GameState gameState;
-
-    private AbstractUI ui;
     public static void main(String[] args) {
+//        Solitaire.DEBUG_STRICT = false;
         Solitaire solitaire = new Solitaire();
-        //        Solitaire.showGUI(solitaire);
-        Solitaire.showCUI(solitaire);
+        Solitaire.showGUI(solitaire);
+        //        Solitaire.showCUI(solitaire);
         solitaire.startGame();
     }
 
@@ -131,7 +136,7 @@ public class Solitaire implements ICommandReceiver, IDataSource {
         {
             if(paramString==null)
                 return EResult.IllegalCommand;
-            int cardIndex = Card.indexOf(paramString);
+            int cardIndex = Card.indexOf(paramString)-1;
             if(cardIndex<0)
                 return EResult.IllegalCommand;
             Card card = cards[cardIndex];
@@ -147,7 +152,7 @@ public class Solitaire implements ICommandReceiver, IDataSource {
 
             if(index<0)
                 return EResult.IllegalCommand;
-            int cardIndex = Card.indexOf(paramString.substring(0, index));
+            int cardIndex = Card.indexOf(paramString.substring(0, index))-1;
             if(cardIndex<0)
                 return EResult.IllegalCommand;
             Card card = cards[cardIndex];
@@ -177,10 +182,10 @@ public class Solitaire implements ICommandReceiver, IDataSource {
             if(cardIndex<0)
                 continue;
             System.out.println("link "+card+" to "+lists[listIndex].getTailCard());
-            if(cardIndex >= lists[i].getOpenedIndex() && 
-                    lists[listIndex].getTailCard().getValue().compareTo(card.getValue())==1 &&
-                    lists[listIndex].getTailCard().getColour().compareTo(card.getColour())!=0) {
-
+            if(
+                    cardIndex >= lists[i].getOpenedIndex() && 
+                    Card.isNext(card, lists[listIndex].getTailCard()) &&
+                    !Card.isSameColour(card, lists[listIndex].getTailCard())) {
                 cut = lists[i].cut(cardIndex);
                 break;
             }
@@ -188,6 +193,7 @@ public class Solitaire implements ICommandReceiver, IDataSource {
         }
         if(cut==null)
             return EResult.Impossible;
+        cut.link(lists[listIndex]);
         return EResult.Welldone;
     }
 
@@ -247,14 +253,16 @@ public class Solitaire implements ICommandReceiver, IDataSource {
 
     private void loop() {
         //run the clock ?
-        ui.refresh();
-        Scanner scanner = new Scanner(System.in);
-        String command = scanner.nextLine();
-        EResult result = executeCommand(command);
-        System.out.println("->"+result);
+        String command = commandQueue.poll();
+        if(command != null) {
+            EResult result = executeCommand(command);
+            System.out.println("->"+result);
+            ui.refresh();
+        }
     }
 
     private void prepare() {
+        commandQueue.clear();
         LinkedList<Card> cardLink = new LinkedList<Card>();
         cardLink.addAll(Arrays.asList(cards));
         Shuffler.shuffle(cardLink);
@@ -273,14 +281,13 @@ public class Solitaire implements ICommandReceiver, IDataSource {
         deck.init(cardLink);
 
         gameState = GameState.Looping;
+        ui.refresh();
+        ui.startTracking();
     }
 
     @Override
-    public synchronized EResult handleCommand(String command) {
-        // TODO Auto-generated method stub
-        if(gameState!=GameState.Looping)
-            return EResult.Refused;
-        return executeCommand(command);
+    public synchronized void handleCommand(String command) {
+        commandQueue.offer(command);
     }
 
     //====================
@@ -313,7 +320,7 @@ public class Solitaire implements ICommandReceiver, IDataSource {
     public Card getListCard(int indexCard, int indexList) {
         return lists[indexList].getCard(indexCard);
     }
-  //====================
+    //====================
     // Interface DataSource Stack Methods
     //====================
     @Override
@@ -323,5 +330,11 @@ public class Solitaire implements ICommandReceiver, IDataSource {
     @Override
     public Card getStackCard(int indexCard, int indexStack) {
         return stacks[indexStack].getCard(indexCard);
+    }
+
+
+    @Override
+    public boolean isTracking() {
+        return gameState == GameState.Looping;
     }
 }

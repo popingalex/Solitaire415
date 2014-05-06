@@ -3,6 +3,8 @@ package card;
 import java.util.LinkedList;
 import java.util.List;
 
+import solitaire.Solitaire;
+
 /**
  * 
  * @author Alex
@@ -10,7 +12,7 @@ import java.util.List;
  */
 public class CardDeck {
     public Card getCard(int index) {
-        return (index<currentIndex || index==cards.size()) ? null : cards.get(index);
+        return (Solitaire.DEBUG_STRICT && index<currentIndex) ? null : cards.get(index);
     }
     
     public int countFaces() {

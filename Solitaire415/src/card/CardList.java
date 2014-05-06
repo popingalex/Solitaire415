@@ -1,9 +1,11 @@
 package card;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import solitaire.EResult;
+import solitaire.Solitaire;
 /**
  * 
  * @author [sign your own name]
@@ -23,7 +25,7 @@ public class CardList {
 	 * @return a faced card, or null if the index is back.
 	 */
 	public Card getCard(int index) {
-		return (index < openedIndex) ? null : cards.get(index);
+		return (Solitaire.DEBUG_STRICT && index < openedIndex) ? null : cards.get(index);
 	}
 
 	public int getOpenedIndex() {
@@ -69,7 +71,7 @@ public class CardList {
 	 */
 	public CardList cut(int index) {
 		if(index < cards.size() && index >= openedIndex) {
-			if(openedIndex == index) {
+			if(openedIndex>0 && openedIndex==index) {
 				this.openedIndex--;
 			}
 			List<Card> subList = this.cards.subList(index, this.cards.size());
@@ -92,6 +94,7 @@ public class CardList {
 	 * @param other
 	 */
 	public void link(CardList other) {
+	    System.out.println("{}"+Arrays.toString(other.cards.toArray()));
 		if(
 				(this.cards.size()==0) ||
 				this.openedIndex==0 &&
@@ -100,6 +103,7 @@ public class CardList {
 			other.cards.addAll(this.cards);
 			other.tailCard = tailCard;
 		}
+		System.out.println("{}"+Arrays.toString(other.cards.toArray()));
 	}
 
 	/**
@@ -125,10 +129,11 @@ public class CardList {
 	 * Open the new tail card if necessary.
 	 */
 	public Card moveTail() {
+//	    System.out.println("no");
 		if(tailCard==null)
 			return null;
 		cards.remove(tailCard);
-		if(openedIndex==cards.size())
+		if(openedIndex>0 && openedIndex==cards.size())
 			openedIndex--;
 		Card temp = tailCard;
 		if(cards.size()>0)

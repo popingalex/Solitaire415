@@ -1,11 +1,11 @@
 package ui;
 
-import card.Card;
 import solitaire.ICommandReceiver;
+import card.Card;
 
 public abstract class AbstractUI implements IDataAccessor {
 
-    protected ICommandReceiver commandReceiver;
+    private ICommandReceiver commandReceiver;
     private IDataSource dataSource;
     public abstract void refresh();
     public final void addCommandReceiver(ICommandReceiver commandReceiver) {
@@ -15,6 +15,9 @@ public abstract class AbstractUI implements IDataAccessor {
         this.dataSource = dataSource;
     }
 
+    protected void handleCommand(String command) {
+        commandReceiver.handleCommand(command);
+    }
     @Override
     public int countDeckBacks() {
         return dataSource.countDeckBacks();
@@ -73,4 +76,5 @@ public abstract class AbstractUI implements IDataAccessor {
         }
         return cards;
     }
+    public abstract void startTracking();
 }
