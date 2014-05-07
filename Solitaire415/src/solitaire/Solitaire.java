@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import ui.AbstractUI;
 import ui.CommandConsole;
 import ui.IDataSource;
 import ui.PaintingPanel;
-import ui.AbstractUI;
 import card.Card;
 import card.CardDeck;
 import card.CardList;
@@ -47,10 +47,16 @@ public class Solitaire implements ICommandReceiver, IDataSource {
      * @param args
      */
     public static void main(String[] args) {
-//        Solitaire.DEBUG_STRICT = false;
+        //        Solitaire.DEBUG_STRICT = false;
         Solitaire solitaire = new Solitaire();
-        Solitaire.showGUI(solitaire);
-        //        Solitaire.showCUI(solitaire);
+        switch (1) {
+        case 1:
+            Solitaire.showGUI(solitaire);
+            break;
+        case 2:
+            Solitaire.showCUI(solitaire);
+            break;
+        }
         solitaire.startGame();
     }
 
@@ -198,15 +204,23 @@ public class Solitaire implements ICommandReceiver, IDataSource {
     }
 
     private EResult send(Card card) {
-        int index = card.getSuit().ordinal();
-        CardStack stack = stacks[index];
-        System.out.println("send "+card);
+        if(card.equals(deck.getCurrentCard())) {
+            for(int j=0;j<4;j++) {
+                if(stacks[j].add(deck.getCurrentCard())==EResult.Welldone) {
+                    deck.takeCard();
+                    return EResult.Welldone;
+                }
+            }
+            return EResult.Impossible;
+        }
         for(int i=0;i<7;i++) {
-            if(lists[i].getTailCard().equals(card)) {
-                if(stack.add(card)==EResult.Impossible)
-                    break;
-                lists[i].moveTail();
-                return EResult.Welldone;
+            if(lists[i].countFaces()>0 && lists[i].getTailCard().equals(card)) {//card find
+                for(int j=0;j<4;j++) {
+                    if(stacks[j].add(card)==EResult.Welldone) {
+                        lists[i].moveTail();
+                        return EResult.Welldone;
+                    }
+                }
             }
         }
         return EResult.Impossible;
@@ -219,7 +233,7 @@ public class Solitaire implements ICommandReceiver, IDataSource {
             return EResult.Impossible;
         if(lists[listIndex].add(deckCard) == EResult.Impossible)
             return EResult.Impossible;
-        deck.takeCard();
+        System.out.println(deck.takeCard());
         return EResult.Welldone;
     }
 

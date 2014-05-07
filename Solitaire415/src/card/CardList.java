@@ -113,8 +113,8 @@ public class CardList {
 	 */
 	public EResult add(Card c) {
 		if(
-				(cards.size()==0) ||
-				Card.isNext(c, this.tailCard) &&
+				(cards.size()==0 && c.getValue()==EValue.King) ||
+				tailCard !=null && Card.isNext(c, this.tailCard) &&
 				!Card.isSameColour(this.tailCard, c)) {
 			this.cards.add(c);
 			this.tailCard = c;

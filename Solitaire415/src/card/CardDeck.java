@@ -71,7 +71,8 @@ public class CardDeck {
 	public Card takeCard() {
 		if(currentCard == null)
 			return null;
-		Card current = cards.removeLast();
+		Card current = currentCard;
+		cards.remove(current);
 		currentCard = currentIndex==cards.size()?null:cards.get(currentIndex);
 		return current;
 	}
