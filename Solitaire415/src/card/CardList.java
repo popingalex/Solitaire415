@@ -96,8 +96,9 @@ public class CardList {
 	public void link(CardList other) {
 	    System.out.println("{}"+Arrays.toString(other.cards.toArray()));
 		if(
-				(this.cards.size()==0) ||
+//				(this.cards.size()==0) ||
 				this.openedIndex==0 &&
+				other.tailCard==null ||
 				Card.isNext(this.cards.get(0), other.tailCard) &&
 				!Card.isSameColour(this.cards.get(0), other.tailCard)){
 			other.cards.addAll(this.cards);

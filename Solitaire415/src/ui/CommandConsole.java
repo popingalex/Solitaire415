@@ -23,6 +23,7 @@ public class CommandConsole extends AbstractUI {
                 Scanner scanner = new Scanner(System.in);
                 String command = scanner.nextLine();
                 handleCommand(command);
+                scanner.close();
             }
         };
         thread.start();
